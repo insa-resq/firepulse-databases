@@ -1,0 +1,15 @@
+{
+    "private": true,
+    "engines": {
+        "node": ">=22.19.0"
+    },
+    "scripts": {
+        "db:migration:create": "prisma migrate dev --create-only",
+        "db:migration:deploy": "prisma migrate deploy",
+        "db:reset": "prisma migrate reset --force"
+    },
+    "dependencies": {
+        "dotenv": "17.2.3",
+        "prisma": "7.0.0"
+    }
+}

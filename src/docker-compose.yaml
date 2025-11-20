@@ -1,0 +1,44 @@
+name: firepulse-databases-services
+
+services:
+    postgres:
+        image: postgres:18.1
+        container_name: postgres
+        restart: always
+        hostname: postgres
+        env_file: .env
+        volumes:
+            - firepulse_postgres_data:/var/lib/postgresql
+        networks:
+            - default
+        ports:
+            - '5432:5432'
+        healthcheck:
+            test: ['CMD-SHELL', 'pg_isready -U $POSTGRES_USER -d $POSTGRES_DB']
+            interval: 2s
+            timeout: 5s
+            retries: 15
+
+    db-migrator:
+        build:
+            context: .
+            dockerfile: Dockerfile.db-migrator
+        container_name: db-migrator
+        restart: no
+        tty: true
+        env_file: .env
+        networks:
+            - default
+        depends_on:
+            postgres:
+                condition: service_healthy
+
+volumes:
+    firepulse_postgres_data:
+        name: firepulse_postgres_data
+        driver: local
+
+networks:
+    default:
+        name: firepulse_databases_network
+        driver: bridge

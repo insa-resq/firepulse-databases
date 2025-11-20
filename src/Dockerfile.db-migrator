@@ -1,0 +1,21 @@
+FROM node:22-slim
+
+WORKDIR /app
+
+RUN apt-get update -y && \
+    apt-get install -y openssl && \
+    rm -rf /var/lib/apt/lists/* && \
+    addgroup --system --gid 1001 resq && \
+    adduser --system --uid 1001 --ingroup resq --home /home/db-migrator db-migrator && \
+    chown -R db-migrator:resq /app
+
+USER db-migrator
+
+COPY --chown=db-migrator:resq package.json package-lock.json prisma.config.ts ./
+
+RUN npm ci
+
+COPY --chown=db-migrator:resq schemas ./schemas
+COPY --chown=db-migrator:resq migrations ./migrations
+
+ENTRYPOINT ["npm", "run", "db:migration:deploy"]
