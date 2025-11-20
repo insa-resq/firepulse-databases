@@ -6,7 +6,7 @@ on:
     workflow_dispatch:
 
 env:
-    DEPLOYMENT_PATH: ~/src
+    DEPLOYMENT_PATH: ~/
 
 permissions:
     contents: read
@@ -29,7 +29,6 @@ jobs:
                     password: ${{ secrets.SSH_PASSWORD }}
                     source: "src/*"
                     target: ${{ env.DEPLOYMENT_PATH }}
-                    strip_components: 1
                     capture_stdout: true
 
             -   name: Execute deployment commands
@@ -42,12 +41,16 @@ jobs:
                         set -e
                         
                         cd ${{ env.DEPLOYMENT_PATH }}
+                        cd src
+                        
+                        chmod +x ./scripts/install-docker.sh
+                        sudo ./scripts/install-docker.sh
                         
                         cat <<EOF > .env
                         POSTGRES_DB=${{ secrets.POSTGRES_DB }}
                         POSTGRES_USER=${{ secrets.POSTGRES_USER }}
                         POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-                        DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@postgres:5432/${{ secrets.POSTGRES_DB }}
+                        DATABASE_URL="postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@postgres:5432/${{ secrets.POSTGRES_DB }}"
                         EOF
                         
                         docker compose up --build -d --wait
