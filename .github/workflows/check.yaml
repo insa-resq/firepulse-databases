@@ -31,4 +31,6 @@ jobs:
 
             -   name: Run validation
                 working-directory: ./src
-                run: npm run db:validate
+                run: |
+                    echo "DATABASE_URL=random" > .env
+                    npm run db:validate
