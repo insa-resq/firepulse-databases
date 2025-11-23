@@ -6,7 +6,8 @@
     "scripts": {
         "db:migration:create": "prisma migrate dev --create-only",
         "db:migration:deploy": "prisma migrate deploy",
-        "db:reset": "prisma migrate reset --force"
+        "db:reset": "prisma migrate reset --force",
+        "db:validate": "prisma validate"
     },
     "dependencies": {
         "dotenv": "17.2.3",

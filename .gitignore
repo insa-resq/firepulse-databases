@@ -1,5 +1,6 @@
 .env*
 !.env.example
+!.env.deploy.example
 .idea
 .vscode
 node_modules

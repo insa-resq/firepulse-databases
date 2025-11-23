@@ -1,28 +1,24 @@
 #!/bin/sh
 
-# This script install Docker on the host if it is not already present.
+# This script installs Docker on the host if it is not already present.
 
 set -eu
 
-# Ensure script is run with root privileges
 if [ "$(id -u)" -ne 0 ]; then
    echo "This script must be run as root"  >&2
    exit 1
 fi
 
-# Ensure Debian-based OS
 if [ ! -f /etc/debian_version ]; then
     echo "This script requires a Debian-based OS." >&2
     exit 1
 fi
 
-# Check if Docker is installed
 if command -v docker > /dev/null 2>&1; then
     echo "Docker is already installed. Skipping installation."
     exit 0
 fi
 
-# Install Docker if not already installed
 
 echo "Docker not found. Installing Docker..."
 
@@ -34,6 +30,7 @@ if [ ! -f "$OS_RELEASE_FILE" ]; then
     exit 1
 fi
 
+# shellcheck source=/dev/null
 . "$OS_RELEASE_FILE"
 
 if [ -z "${ID:-}" ]; then
