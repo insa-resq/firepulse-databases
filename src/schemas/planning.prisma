@@ -1,1 +1,47 @@
+model Firefighter {
+  id          Int              @id @default(autoincrement())
+  firstName   String
+  lastName    String
+  rank        Rank
+  Availability AvailabilitySlot[]
 
+
+  @@index([rank])
+  @@index([Availability])
+  @@schema("planning")
+}
+
+model AvailabilitySlot {
+  id            Int          @id @default(autoincrement())
+  firefighterId Int
+  dayOfWeek     Weekday
+  startTime     String
+  endTime       String
+
+  firefighter   Firefighter  @relation(fields: [firefighterId], references: [id])
+
+  @@index([dayOfWeek])
+  @@schema("planning")
+}
+
+
+enum Rank {
+  RANK_1
+  RANK_2
+  RANK_3
+  RANK_4
+
+@@schema("planning")
+}
+
+enum Weekday {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+
+  @@schema("planning")
+}
