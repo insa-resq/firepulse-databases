@@ -5,7 +5,7 @@ It uses [Prisma ORM](https://www.prisma.io/docs/orm) to manage the schemas, and 
 
 ## Contents
 
-- `src/schemas/`: Prisma schema files split by domain (`auth.prisma`, `planning.prisma`, `detection.prisma`, `main.prisma`, `registry.prisma`).
+- `src/schemas/`: Prisma schema files split by domain (`accounts.prisma`, `planning.prisma`, `detection.prisma`, `main.prisma`, `registry.prisma`).
 - `src/migrations/`: Prisma migration history.
 - `src/prisma.config.ts`: Prisma configuration (schema and migrations paths, datasource env var).
 - `src/Dockerfile.db-migrator`: Image that installs Prisma CLI and runs migrations.

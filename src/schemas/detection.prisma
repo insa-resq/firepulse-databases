@@ -1,58 +1,59 @@
 model FireAlert {
-  id          Int          @id @default(autoincrement())
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  description String
-  confidence  Float
-  latitude    Float
-  longitude   Float
-  severity    FireSeverity
-  status      AlertStatus  @default(NEW)
-  imageId     String?
-  image       Image?       @relation(fields: [imageId], references: [id])
+    id          Int          @id @default(autoincrement())
+    createdAt   DateTime     @default(now())
+    updatedAt   DateTime     @updatedAt
+    description String
+    confidence  Float
+    latitude    Float
+    longitude   Float
+    severity    FireSeverity
+    status      AlertStatus  @default(NEW)
+    imageId     String?
+    image       Image?       @relation(fields: [imageId], references: [id], onDelete: SetNull)
 
-  @@index([severity])
-  @@index([status])
-  @@schema("detection")
+    @@index([createdAt])
+    @@index([severity])
+    @@index([status])
+    @@schema("detection")
 }
 
 model Image {
-  id        String      @id @default(cuid(2))
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  url       String      @unique
-  width     Int
-  height    Int
-  split     ImageSplit
-  metadata  Json        @default("{}")
-  FireAlert FireAlert[]
+    id        String      @id @default(cuid(2))
+    createdAt DateTime    @default(now())
+    updatedAt DateTime    @updatedAt
+    url       String      @unique
+    width     Int
+    height    Int
+    split     ImageSplit
+    metadata  Json        @default("{}")
+    alerts    FireAlert[]
 
-  @@index([split])
-  @@schema("detection")
+    @@index([split])
+    @@schema("detection")
 }
 
 enum FireSeverity {
-  LOW
-  MEDIUM
-  HIGH
-  CRITICAL
+    LOW
+    MEDIUM
+    HIGH
+    CRITICAL
 
-  @@schema("detection")
+    @@schema("detection")
 }
 
 enum AlertStatus {
-  NEW
-  IN_PROGRESS
-  RESOLVED
-  DISMISSED
+    NEW
+    IN_PROGRESS
+    RESOLVED
+    DISMISSED
 
-  @@schema("detection")
+    @@schema("detection")
 }
 
 enum ImageSplit {
-  TRAIN
-  VALIDATION
-  TEST
+    TRAIN
+    VALIDATION
+    TEST
 
-  @@schema("detection")
+    @@schema("detection")
 }

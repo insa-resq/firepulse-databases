@@ -1,47 +1,64 @@
-model Firefighter {
-  id          Int              @id @default(autoincrement())
-  firstName   String
-  lastName    String
-  rank        Rank
-  Availability AvailabilitySlot[]
+model Planning {
+    id               String            @id @default(cuid(2))
+    createdAt        DateTime          @default(now())
+    updatedAt        DateTime          @updatedAt
+    year             Int
+    weekNumber       Int
+    stationId        String
+    station          FireStation       @relation(fields: [stationId], references: [id], onDelete: Cascade)
+    shiftAssignments ShiftAssignment[]
 
+    @@unique([year, weekNumber, stationId])
+    @@schema("planning")
+}
 
-  @@index([rank])
-  @@index([Availability])
-  @@schema("planning")
+model ShiftAssignment {
+    id            String      @id @default(cuid(2))
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
+    weekday       Weekday
+    shiftType     ShiftType
+    firefighterId String
+    firefighter   Firefighter @relation(fields: [firefighterId], references: [id], onDelete: Cascade)
+    planningId    String
+    planning      Planning    @relation(fields: [planningId], references: [id], onDelete: Cascade)
+
+    @@unique([planningId, weekday, firefighterId])
+    @@schema("planning")
 }
 
 model AvailabilitySlot {
-  id            Int          @id @default(autoincrement())
-  firefighterId Int
-  dayOfWeek     Weekday
-  startTime     String
-  endTime       String
+    id            String      @id @default(cuid(2))
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
+    year          Int
+    weekNumber    Int
+    weekday       Weekday
+    isAvailable   Boolean
+    firefighterId String
+    firefighter   Firefighter @relation(fields: [firefighterId], references: [id], onDelete: Cascade)
 
-  firefighter   Firefighter  @relation(fields: [firefighterId], references: [id])
-
-  @@index([dayOfWeek])
-  @@schema("planning")
-}
-
-
-enum Rank {
-  RANK_1
-  RANK_2
-  RANK_3
-  RANK_4
-
-@@schema("planning")
+    @@unique([firefighterId, year, weekNumber, weekday])
+    @@index([year, weekNumber, weekday, isAvailable])
+    @@schema("planning")
 }
 
 enum Weekday {
-  MONDAY
-  TUESDAY
-  WEDNESDAY
-  THURSDAY
-  FRIDAY
-  SATURDAY
-  SUNDAY
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+    SATURDAY
+    SUNDAY
 
-  @@schema("planning")
+    @@schema("planning")
+}
+
+enum ShiftType {
+    ON_SHIFT // Actively working a shift
+    OFF_DUTY // Not available
+    ON_CALL // Available to be called in case of emergency
+
+    @@schema("planning")
 }

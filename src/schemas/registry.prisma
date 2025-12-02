@@ -1,1 +1,100 @@
+model FireStation {
+    id           String        @id @default(cuid(2))
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime      @updatedAt
+    name         String
+    latitude     Float
+    longitude    Float
+    vehicles     Vehicle[]
+    firefighters Firefighter[]
+    plannings    Planning[]
 
+    @@index([name])
+    @@schema("registry")
+}
+
+model Vehicle {
+    id             String      @id @default(cuid(2))
+    createdAt      DateTime    @default(now())
+    updatedAt      DateTime    @updatedAt
+    type           VehicleType
+    totalCount     Int
+    availableCount Int
+    stationId      String
+    station        FireStation @relation(fields: [stationId], references: [id], onDelete: Cascade)
+
+    @@index([stationId])
+    @@index([type])
+    @@schema("registry")
+}
+
+model Firefighter {
+    id                String               @id @default(cuid(2))
+    createdAt         DateTime             @default(now())
+    updatedAt         DateTime             @updatedAt
+    firstName         String
+    lastName          String
+    rank              FirefighterRank
+    training          FirefighterTraining?
+    stationId         String
+    station           FireStation          @relation(fields: [stationId], references: [id], onDelete: Restrict)
+    userId            String               @unique
+    user              User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+    availabilitySlots AvailabilitySlot[]
+    shiftAssignments  ShiftAssignment[]
+
+    @@index([stationId])
+    @@index([rank])
+    @@schema("registry")
+}
+
+model FirefighterTraining {
+    id            String      @id @default(cuid(2))
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
+    firefighterId String      @unique
+    firefighter   Firefighter @relation(fields: [firefighterId], references: [id], onDelete: Cascade)
+    // Opérationnel
+    ppbe          Boolean     @default(false)
+    inc           Boolean     @default(false)
+    roadRescue    Boolean     @default(false)
+    fiSpv         Boolean     @default(false)
+    // Commandement / Chef d'agrès
+    teamLeader    Boolean     @default(false) // Chef d'équipe
+    ca1e          Boolean     @default(false) // Chef d'agrès 1 équipe
+    cate          Boolean     @default(false) // Chef d'agrès tout engin
+    cdg           Boolean     @default(false) // Chef de groupe
+    // Commandement supplémentaire
+    cod0          Boolean     @default(false)
+    cod1          Boolean     @default(false)
+    // Conduite
+    permitB       Boolean     @default(false)
+    permitC       Boolean     @default(false)
+
+    @@schema("registry")
+}
+
+enum VehicleType {
+    CCFL // Camion Citerne Feux de Forêts Léger (~600–2000 L)
+    CCFM // Camion Citerne Feux de Forêts Moyen (~2000–4000 L)
+    CCFS // Camion Citerne Feux de Forêts Super (>4000 L)
+    CCGC // Camion Citerne Grande Capacité (6000–12000 L)
+    VLHR // Véhicule Léger Hors-Route (chef d’agrès ou reco)
+    VTUF // Véhicule Tout Usage Feux de Forêts (logistique / appui)
+
+    @@schema("registry")
+}
+
+enum FirefighterRank {
+    SECOND_CLASS
+    FIRST_CLASS
+    CORPORAL
+    CHIEF_CORPORAL
+    SERGEANT
+    CHIEF_SERGEANT
+    ADJUTANT
+    CHIEF_ADJUTANT
+    LIEUTENANT
+
+    @@schema("registry")
+}

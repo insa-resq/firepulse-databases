@@ -1,5 +1,5 @@
 datasource firepulse_db {
-  provider     = "postgresql"
-  relationMode = "foreignKeys"
-  schemas      = ["auth", "detection", "planning", "registry"]
+    provider     = "postgresql"
+    relationMode = "foreignKeys"
+    schemas      = ["accounts", "detection", "planning", "registry"]
 }
