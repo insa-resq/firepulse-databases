@@ -1,0 +1,118 @@
+erDiagram
+  User:::accounts {
+    string id PK
+    datetime createdAt
+    datetime updatedAt
+    string email UK
+    string password
+    UserRole role "ADMIN, ALERT_MONITOR, PLANNING_MANAGER, FIREFIGHTER"
+    string name
+    string avatarUrl
+  }
+  FireAlert:::detection {
+    int id PK
+    datetime createdAt
+    datetime updatedAt
+    string description
+    float confidence
+    float latitude
+    float longitude
+    FireSeverity severity "LOW, MEDIUM, HIGH, CRITICAL"
+    AlertStatus status "NEW, IN_PROGRESS, RESOLVED, DISMISSED"
+    string imageId FK
+  }
+  Image:::detection {
+    string id PK
+    datetime createdAt
+    datetime updatedAt
+    string url UK
+    int width
+    int height
+    ImageSplit split "TRAIN, VALIDATION, TEST"
+    json metadata
+  }
+  Planning:::planning {
+    string id PK
+    datetime createdAt
+    datetime updatedAt
+    int year
+    int weekNumber
+    string stationId FK
+  }
+  ShiftAssignment:::planning {
+    string id PK
+    datetime createdAt
+    datetime updatedAt
+    Weekday weekday "MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY"
+    ShiftType shiftType "ON_SHIFT, OFF_DUTY, ON_CALL"
+    string firefighterId FK
+    string planningId FK
+  }
+  AvailabilitySlot:::planning {
+    string id PK
+    datetime createdAt
+    datetime updatedAt
+    int year
+    int weekNumber
+    Weekday weekday "MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY"
+    bool isAvailable
+    string firefighterId FK
+  }
+  FireStation:::registry {
+    string id PK
+    datetime createdAt
+    datetime updatedAt
+    string name
+    float latitude
+    float longitude
+  }
+  Vehicle:::registry {
+    string id PK
+    datetime createdAt
+    datetime updatedAt
+    VehicleType type "CCFL, CCFM, CCFS, CCGC, VLHR, VTUF"
+    int totalCount
+    int availableCount
+    string stationId FK
+  }
+  Firefighter:::registry {
+    string id PK
+    datetime createdAt
+    datetime updatedAt
+    string firstName
+    string lastName
+    FirefighterRank rank "SECOND_CLASS, FIRST_CLASS, CORPORAL, CHIEF_CORPORAL, SERGEANT, CHIEF_SERGEANT, ADJUTANT, CHIEF_ADJUTANT, LIEUTENANT"
+    string stationId FK
+    string userId FK,UK
+  }
+  FirefighterTraining:::registry {
+    string id PK
+    datetime createdAt
+    datetime updatedAt
+    string firefighterId FK,UK
+    bool ppbe
+    bool inc
+    bool roadRescue
+    bool fiSpv
+    bool teamLeader
+    bool ca1e
+    bool cate
+    bool cdg
+    bool cod0
+    bool cod1
+    bool permitB
+    bool permitC
+  }
+  User ||--|| Firefighter : "linked to"
+  Image ||--o{ FireAlert : "related to"
+  FireStation ||--o{ Planning : "has"
+  FireStation ||--o{ Vehicle : "has"
+  FireStation ||--o{ Firefighter : "has"
+  Firefighter ||--o{ AvailabilitySlot : "declares"
+  Firefighter ||--o{ ShiftAssignment : "is assigned to"
+  Firefighter ||--|| FirefighterTraining : "linked to"
+  Planning ||--o{ ShiftAssignment : "composed of"
+  classDef detection fill:#fff4dd,stroke:#000
+  classDef accounts fill:#eeeeee,stroke:#000
+  classDef registry fill:#cde498,stroke:#000
+  classDef planning fill:#ececff,stroke:#000

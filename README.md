@@ -3,6 +3,11 @@
 This repository contains the database schemas, migrations, and deployment tooling for ResQ's FirePulse system. 
 It uses [Prisma ORM](https://www.prisma.io/docs/orm) to manage the schemas, and [Docker](https://docs.docker.com/reference) to orchestrate a [PostgreSQL](https://www.postgresql.org/docs/18/) instance as well as a migration runner.
 
+
+## Overview
+
+![Database Diagram](src/diagrams/db.png)
+
 ## Contents
 
 - `src/schemas/`: Prisma schema files split by domain (`accounts.prisma`, `planning.prisma`, `detection.prisma`, `main.prisma`, `registry.prisma`).
@@ -95,6 +100,21 @@ Run these from the [`src/`](./src) directory.
   ```bash
   npm run db:reset
   ```
+
+### Generate UML Diagrams
+
+You can generate an Entity-Relationship diagram from the Prisma schemas in [`src/schemas/`](./src/schemas):
+
+- Produce a Mermaid ER diagram file:
+  ```bash
+  cd src
+  npm run db:uml
+  ```
+  This creates/overwrites `src/diagrams/db.mmd`.
+
+- Viewing/exporting the diagram:
+  - Many IDEs can preview Mermaid (`.mmd`) files directly.
+  - Alternatively, paste the contents of `db.mmd` into an online Mermaid viewer to export SVG/PNG.
 
 ## Deployment
 
