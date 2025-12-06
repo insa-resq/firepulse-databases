@@ -102,12 +102,9 @@ cd "${DEPLOYMENT_PATH}"
 
 chmod 600 .env
 
-chmod +x ./scripts/install-docker.sh
-sudo ./scripts/install-docker.sh
-
 echo 'Starting Docker services...'
-sudo docker compose up --build -d --wait
-sudo docker system prune -f
+docker compose up --build -d --wait
+docker system prune -f
 EOF
 
 echo "Deployment completed successfully !"
