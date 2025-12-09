@@ -5,11 +5,13 @@ model User {
     email       String       @unique
     password    String
     role        UserRole
-    name        String?
-    avatarUrl   String?
+    avatarUrl   String
     firefighter Firefighter?
+    stationId   String
+    station     FireStation  @relation(fields: [stationId], references: [id], onDelete: Restrict)
 
     @@index([role])
+    @@index([stationId])
     @@schema("accounts")
 }
 

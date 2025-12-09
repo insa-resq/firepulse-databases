@@ -8,6 +8,7 @@ model FireStation {
     vehicles     Vehicle[]
     firefighters Firefighter[]
     plannings    Planning[]
+    users        User[]
 
     @@index([name])
     @@schema("registry")
@@ -20,6 +21,7 @@ model Vehicle {
     type           VehicleType
     totalCount     Int
     availableCount Int
+    metadata       Json        @default("{}")
     stationId      String
     station        FireStation @relation(fields: [stationId], references: [id], onDelete: Cascade)
 
@@ -75,12 +77,8 @@ model FirefighterTraining {
 }
 
 enum VehicleType {
-    CCFL // Camion Citerne Feux de Forêts Léger (~600–2000 L)
-    CCFM // Camion Citerne Feux de Forêts Moyen (~2000–4000 L)
-    CCFS // Camion Citerne Feux de Forêts Super (>4000 L)
-    CCGC // Camion Citerne Grande Capacité (6000–12000 L)
-    VLHR // Véhicule Léger Hors-Route (chef d’agrès ou reco)
-    VTUF // Véhicule Tout Usage Feux de Forêts (logistique / appui)
+    AMBULANCE
+    FIRE_TRUCK
 
     @@schema("registry")
 }

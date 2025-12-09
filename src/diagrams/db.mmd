@@ -6,8 +6,8 @@ erDiagram
     string email UK
     string password
     UserRole role "ADMIN, ALERT_MONITOR, PLANNING_MANAGER, FIREFIGHTER"
-    string name
     string avatarUrl
+    string stationId FK
   }
   FireAlert:::detection {
     int id PK
@@ -70,9 +70,10 @@ erDiagram
     string id PK
     datetime createdAt
     datetime updatedAt
-    VehicleType type "CCFL, CCFM, CCFS, CCGC, VLHR, VTUF"
+    VehicleType type "AMBULANCE, FIRE_TRUCK"
     int totalCount
     int availableCount
+    json metadata
     string stationId FK
   }
   Firefighter:::registry {
@@ -103,8 +104,9 @@ erDiagram
     bool permitB
     bool permitC
   }
-  User ||--|| Firefighter : "linked to"
   Image ||--o{ FireAlert : "related to"
+  User ||--|| Firefighter : "linked to"
+  User }o--|| FireStation : "belongs to"
   FireStation ||--o{ Planning : "has"
   FireStation ||--o{ Vehicle : "has"
   FireStation ||--o{ Firefighter : "has"
