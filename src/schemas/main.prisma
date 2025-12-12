@@ -3,3 +3,9 @@ datasource firepulse_db {
     relationMode = "foreignKeys"
     schemas      = ["accounts", "detection", "planning", "registry"]
 }
+
+generator client {
+    provider     = "prisma-client"
+    output       = "../prisma-client"
+    moduleFormat = "esm"
+}

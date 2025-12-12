@@ -6,9 +6,9 @@ model User {
     password    String
     role        UserRole
     avatarUrl   String
-    firefighter Firefighter?
     stationId   String
     station     FireStation  @relation(fields: [stationId], references: [id], onDelete: Restrict)
+    firefighter Firefighter?
 
     @@index([role])
     @@index([stationId])
