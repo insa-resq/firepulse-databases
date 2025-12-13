@@ -56,7 +56,7 @@ async function main() {
                     { value: $Enums.ImageSplit.VALIDATION, weight: 15 },
                     { value: $Enums.ImageSplit.TEST, weight: 15 },
                 ]),
-                metadata: JSON.stringify({
+                metadata: {
                     filename: faker.system.commonFileName('png'),
                     annotation: Object.values({
                         classId: faker.number.binary(),
@@ -65,7 +65,7 @@ async function main() {
                         width: faker.number.float({ min: 0, max: 1, fractionDigits: 6 }),
                         height: faker.number.float({ min: 0, max: 1, fractionDigits: 6 }),
                     }).join(' ')
-                }),
+                },
             })),
             skipDuplicates: true
         });
@@ -123,10 +123,10 @@ async function main() {
                 type: faker.helpers.enumValue($Enums.VehicleType),
                 totalCount: vehicleTotalCounts[index],
                 availableCount: faker.number.int({ min: 0, max: vehicleTotalCounts[index] }),
-                metadata: JSON.stringify({
+                metadata: {
                     capacity: faker.helpers.arrayElement([1000, 2000, 3000, 4000, 5000]),
                     speed: faker.number.int({ min: 60, max: 120 }),
-                }),
+                },
                 stationId: faker.helpers.arrayElement(fireStationIds),
             })),
             skipDuplicates: true

@@ -28,7 +28,7 @@ if [ "$MISSING_VARS" -eq 1 ]; then
     exit 1
 fi
 
-DEPLOYMENT_PATH=/home/$SSH_USER/deployment
+DEPLOYMENT_PATH=/home/$SSH_USER/firepulse-databases
 
 # Get confirmation from user
 echo "You are about to deploy all files from the 'src' directory to the remote server:"
