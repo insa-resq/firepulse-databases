@@ -3,7 +3,7 @@ import { fakerFR as faker } from '@faker-js/faker';
 import bcrypt from 'bcrypt';
 import { $Enums, PrismaClient } from '../prisma-client/client';
 
-const DEFAULT_PASSWORD = 'Password123!' as const;
+const DEFAULT_PASSWORD = 'password' as const;
 const WEEKS_COUNT = 53 as const;
 const FRANCE_BOUNDING_BOX = {
     minLat: 42.5,
@@ -43,6 +43,7 @@ async function main() {
         await tx.availabilitySlot.deleteMany();
         await tx.shiftAssignment.deleteMany();
         await tx.planning.deleteMany();
+        await tx.$executeRaw`ALTER SEQUENCE detection."FireAlert_id_seq" RESTART WITH 1`;
         
         console.log('Creating new data...');
         
@@ -70,7 +71,7 @@ async function main() {
             skipDuplicates: true
         });
         
-        console.log('\t- Created images.');
+        console.log('-> Created images.');
         
         const testImages = images.filter((image) => image.split === $Enums.ImageSplit.TEST);
         const imageIds = faker.helpers.uniqueArray(
@@ -101,7 +102,7 @@ async function main() {
             skipDuplicates: true
         });
         
-        console.log('\t- Created fire alerts.');
+        console.log('-> Created fire alerts.');
         
         const fireStations = await tx.fireStation.createManyAndReturn({
             data: Array.from({ length: 10 }).map(() => ({
@@ -112,7 +113,7 @@ async function main() {
             skipDuplicates: true
         });
         
-        console.log('\t- Created fire stations.');
+        console.log('-> Created fire stations.');
         
         const fireStationIds = fireStations.map(station => station.id);
         
@@ -132,17 +133,28 @@ async function main() {
             skipDuplicates: true
         });
         
-        console.log('\t- Created vehicles.');
+        console.log('-> Created vehicles.');
         
-        await tx.user.create({
-            data: {
-                email: faker.internet.email().toLowerCase(),
+        const adminEmails = new Set(
+            (process.env.ADMIN_EMAILS ?? '').split(',').map(email => email.trim().toLowerCase())
+        );
+        const adminStations = faker.helpers.uniqueArray(
+            () => faker.helpers.arrayElement(fireStationIds),
+            adminEmails.size
+        );
+        
+        await tx.user.createMany({
+            data: Array.from(adminEmails).map((email, index) => ({
+                email: email,
                 password: hashedPassword,
                 role: $Enums.UserRole.ADMIN,
-                avatarUrl: generateAvatarUrl('admin'),
-                stationId: faker.helpers.arrayElement(fireStationIds),
-            },
+                avatarUrl: generateAvatarUrl(`admin_${index+1}`),
+                stationId: adminStations[index],
+            })),
+            skipDuplicates: true
         });
+        
+        console.log('-> Created admin users.');
         
         await tx.user.createMany({
             data: fireStationIds.flatMap((stationId) => ([
@@ -176,7 +188,7 @@ async function main() {
             skipDuplicates: true
         });
         
-        console.log('\t- Created users.');
+        console.log('-> Created other users.');
         
         const firefighters = await tx.firefighter.createManyAndReturn({
             data: firefighterUsers.map(({ id, stationId }) => ({
@@ -199,7 +211,7 @@ async function main() {
             skipDuplicates: true
         });
         
-        console.log('\t- Created firefighters.');
+        console.log('-> Created firefighters.');
         
         await tx.firefighterTraining.createMany({
             data: firefighters.map(({ id }) => ({
@@ -220,7 +232,7 @@ async function main() {
             skipDuplicates: true
         });
         
-        console.log('\t- Created firefighters trainings.');
+        console.log('-> Created firefighters trainings.');
         
         const availabilitySlots = await tx.availabilitySlot.createManyAndReturn({
             data: firefighters.flatMap(({ id }) =>
@@ -239,7 +251,7 @@ async function main() {
             skipDuplicates: true
         });
         
-        console.log('\t- Created availability slots.');
+        console.log('-> Created availability slots.');
         
         const plannings = await tx.planning.createManyAndReturn({
             data: fireStationIds.flatMap((stationId) =>
@@ -254,7 +266,7 @@ async function main() {
             skipDuplicates: true
         });
         
-        console.log('\t- Created plannings.');
+        console.log('-> Created plannings.');
         
         await tx.shiftAssignment.createMany({
             data: plannings.flatMap(({ id: planningId, stationId, year, weekNumber }) =>
@@ -286,7 +298,7 @@ async function main() {
             skipDuplicates: true
         });
         
-        console.log('\t- Created shift assignments.');
+        console.log('-> Created shift assignments.');
         
         console.log('Seeding completed !');
     });
