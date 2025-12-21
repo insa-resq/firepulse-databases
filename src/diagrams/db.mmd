@@ -70,10 +70,9 @@ erDiagram
     string id PK
     datetime createdAt
     datetime updatedAt
-    VehicleType type "AMBULANCE, FIRE_TRUCK"
+    VehicleType type "AMBULANCE, CANADAIR, SMALL_TRUCK, MEDIUM_TRUCK, LARGE_TRUCK, SMALL_BOAT, LARGE_BOAT, HELICOPTER"
     int totalCount
     int availableCount
-    json metadata
     string stationId FK
   }
   Firefighter:::registry {
@@ -82,7 +81,7 @@ erDiagram
     datetime updatedAt
     string firstName
     string lastName
-    FirefighterRank rank "SECOND_CLASS, FIRST_CLASS, CORPORAL, CHIEF_CORPORAL, SERGEANT, CHIEF_SERGEANT, ADJUTANT, CHIEF_ADJUTANT, LIEUTENANT"
+    FirefighterRank rank "SAPPER, CORPORAL, SERGEANT, ADJUTANT, LIEUTENANT, CAPTAIN"
     string stationId FK
     string userId FK,UK
   }
@@ -91,18 +90,14 @@ erDiagram
     datetime createdAt
     datetime updatedAt
     string firefighterId FK,UK
-    bool ppbe
-    bool inc
-    bool roadRescue
-    bool fiSpv
-    bool teamLeader
-    bool ca1e
-    bool cate
-    bool cdg
-    bool cod0
-    bool cod1
     bool permitB
     bool permitC
+    bool permitAircraft
+    bool suap
+    bool inc
+    bool smallTeamLeader
+    bool mediumTeamLeader
+    bool largeTeamLeader
   }
   Image ||--o{ FireAlert : "related to"
   User ||--|| Firefighter : "linked to"
