@@ -16,12 +16,12 @@
     "dependencies": {
         "@mrleebo/prisma-ast": "^0.13.0",
         "dotenv": "17.2.3",
-        "prisma": "^7.1.0"
+        "prisma": "^7.2.0"
     },
     "devDependencies": {
         "@faker-js/faker": "^10.1.0",
-        "@prisma/adapter-pg": "^7.1.0",
-        "@prisma/client": "^7.1.0",
+        "@prisma/adapter-pg": "^7.2.0",
+        "@prisma/client": "^7.2.0",
         "@types/bcrypt": "^6.0.0",
         "@types/node": "^25.0.0",
         "bcrypt": "^6.0.0",

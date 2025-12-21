@@ -124,10 +124,6 @@ async function main() {
                 type: faker.helpers.enumValue($Enums.VehicleType),
                 totalCount: vehicleTotalCounts[index],
                 availableCount: faker.number.int({ min: 0, max: vehicleTotalCounts[index] }),
-                metadata: {
-                    capacity: faker.helpers.arrayElement([1000, 2000, 3000, 4000, 5000]),
-                    speed: faker.number.int({ min: 60, max: 120 }),
-                },
                 stationId: faker.helpers.arrayElement(fireStationIds),
             })),
             skipDuplicates: true
@@ -195,15 +191,12 @@ async function main() {
                 firstName: faker.person.firstName(),
                 lastName: faker.person.lastName(),
                 rank: faker.helpers.weightedArrayElement([
-                    { value: $Enums.FirefighterRank.FIRST_CLASS, weight: 35 },
-                    { value: $Enums.FirefighterRank.SECOND_CLASS, weight: 20 },
-                    { value: $Enums.FirefighterRank.SERGEANT, weight: 20 },
-                    { value: $Enums.FirefighterRank.CHIEF_SERGEANT, weight: 10 },
-                    { value: $Enums.FirefighterRank.CORPORAL, weight: 5 },
-                    { value: $Enums.FirefighterRank.CHIEF_CORPORAL, weight: 4 },
-                    { value: $Enums.FirefighterRank.ADJUTANT, weight: 3 },
-                    { value: $Enums.FirefighterRank.CHIEF_ADJUTANT, weight: 2 },
-                    { value: $Enums.FirefighterRank.LIEUTENANT, weight: 1 },
+                    { value: $Enums.FirefighterRank.SAPPER, weight: 50 },
+                    { value: $Enums.FirefighterRank.SERGEANT, weight: 25 },
+                    { value: $Enums.FirefighterRank.CORPORAL, weight: 15 },
+                    { value: $Enums.FirefighterRank.ADJUTANT, weight: 5 },
+                    { value: $Enums.FirefighterRank.LIEUTENANT, weight: 3 },
+                    { value: $Enums.FirefighterRank.CAPTAIN, weight: 2 },
                 ]),
                 stationId: stationId,
                 userId: id,
@@ -216,18 +209,14 @@ async function main() {
         await tx.firefighterTraining.createMany({
             data: firefighters.map(({ id }) => ({
                 firefighterId: id,
-                ppbe: faker.datatype.boolean({ probability: 0.75 }),
-                inc: faker.datatype.boolean({ probability: 0.75 }),
-                roadRescue: faker.datatype.boolean({ probability: 0.75 }),
-                fiSpv: faker.datatype.boolean({ probability: 0.75 }),
-                teamLeader: faker.datatype.boolean({ probability: 0.45 }),
-                ca1e: faker.datatype.boolean({ probability: 0.35 }),
-                cate: faker.datatype.boolean({ probability: 0.25 }),
-                cdg: faker.datatype.boolean({ probability: 0.15 }),
-                cod0: faker.datatype.boolean({ probability: 0.15 }),
-                cod1: faker.datatype.boolean({ probability: 0.10 }),
                 permitB: faker.datatype.boolean({ probability: 0.95 }),
                 permitC: faker.datatype.boolean({ probability: 0.15 }),
+                permitAircraft: faker.datatype.boolean({ probability: 0.10 }),
+                suap: faker.datatype.boolean({ probability: 0.80 }),
+                inc: faker.datatype.boolean({ probability: 0.75 }),
+                smallTeamLeader: faker.datatype.boolean({ probability: 0.20 }),
+                mediumTeamLeader: faker.datatype.boolean({ probability: 0.10 }),
+                largeTeamLeader: faker.datatype.boolean({ probability: 0.5 })
             })),
             skipDuplicates: true
         });

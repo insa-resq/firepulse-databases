@@ -21,7 +21,6 @@ model Vehicle {
     type           VehicleType
     totalCount     Int
     availableCount Int
-    metadata       Json        @default("{}")
     stationId      String
     station        FireStation @relation(fields: [stationId], references: [id], onDelete: Cascade)
 
@@ -51,48 +50,43 @@ model Firefighter {
 }
 
 model FirefighterTraining {
-    id            String      @id @default(cuid(2))
-    createdAt     DateTime    @default(now())
-    updatedAt     DateTime    @updatedAt
-    firefighterId String      @unique
-    firefighter   Firefighter @relation(fields: [firefighterId], references: [id], onDelete: Cascade)
-    // Opérationnel
-    ppbe          Boolean     @default(false)
-    inc           Boolean     @default(false)
-    roadRescue    Boolean     @default(false)
-    fiSpv         Boolean     @default(false)
-    // Commandement / Chef d'agrès
-    teamLeader    Boolean     @default(false) // Chef d'équipe
-    ca1e          Boolean     @default(false) // Chef d'agrès 1 équipe
-    cate          Boolean     @default(false) // Chef d'agrès tout engin
-    cdg           Boolean     @default(false) // Chef de groupe
-    // Commandement supplémentaire
-    cod0          Boolean     @default(false)
-    cod1          Boolean     @default(false)
-    // Conduite
-    permitB       Boolean     @default(false)
-    permitC       Boolean     @default(false)
+    id               String      @id @default(cuid(2))
+    createdAt        DateTime    @default(now())
+    updatedAt        DateTime    @updatedAt
+    firefighterId    String      @unique
+    firefighter      Firefighter @relation(fields: [firefighterId], references: [id], onDelete: Cascade)
+    permitB          Boolean     @default(false) // Permis B
+    permitC          Boolean     @default(false) // Permis C
+    permitAircraft   Boolean     @default(false) // Permis avion
+    suap             Boolean     @default(false) // Secours d'urgence aux personnes
+    inc              Boolean     @default(false) // Formation lutte contre les incendies
+    smallTeamLeader  Boolean     @default(false) // Chef d'équipe petit engin
+    mediumTeamLeader Boolean     @default(false) // Chef d'équipe moyen engin
+    largeTeamLeader  Boolean     @default(false) // Chef d'équipe gros engin
 
     @@schema("registry")
 }
 
 enum VehicleType {
     AMBULANCE
-    FIRE_TRUCK
+    CANADAIR
+    SMALL_TRUCK
+    MEDIUM_TRUCK
+    LARGE_TRUCK
+    SMALL_BOAT
+    LARGE_BOAT
+    HELICOPTER
 
     @@schema("registry")
 }
 
 enum FirefighterRank {
-    SECOND_CLASS
-    FIRST_CLASS
+    SAPPER
     CORPORAL
-    CHIEF_CORPORAL
     SERGEANT
-    CHIEF_SERGEANT
     ADJUTANT
-    CHIEF_ADJUTANT
     LIEUTENANT
+    CAPTAIN
 
     @@schema("registry")
 }
