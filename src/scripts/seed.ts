@@ -48,26 +48,41 @@ async function main() {
         console.log('Creating new data...');
         
         const images = await tx.image.createManyAndReturn({
-            data: Array.from({ length: 500 }).map(() => ({
-                url: faker.image.url({ width: 1024, height: 1024 }),
-                width: 1024,
-                height: 1024,
-                split: faker.helpers.weightedArrayElement([
-                    { value: $Enums.ImageSplit.TRAIN, weight: 70 },
-                    { value: $Enums.ImageSplit.VALIDATION, weight: 15 },
-                    { value: $Enums.ImageSplit.TEST, weight: 15 },
-                ]),
-                metadata: {
-                    filename: faker.system.commonFileName('png'),
-                    annotation: Object.values({
-                        classId: faker.number.binary(),
-                        xCenter: faker.number.float({ min: 0, max: 1, fractionDigits: 6 }),
-                        yCenter: faker.number.float({ min: 0, max: 1, fractionDigits: 6 }),
-                        width: faker.number.float({ min: 0, max: 1, fractionDigits: 6 }),
-                        height: faker.number.float({ min: 0, max: 1, fractionDigits: 6 }),
-                    }).join(' ')
-                },
-            })),
+            data: Array.from({ length: 500 }).map(() => {
+                const containsFire = faker.datatype.boolean({ probability: 0.5 });
+                return {
+                    url: faker.image.url({ width: 1024, height: 1024 }),
+                    split: faker.helpers.weightedArrayElement([
+                        { value: $Enums.ImageSplit.TRAIN, weight: 70 },
+                        { value: $Enums.ImageSplit.VALIDATION, weight: 15 },
+                        { value: $Enums.ImageSplit.TEST, weight: 10 },
+                        { value: $Enums.ImageSplit.NONE, weight: 5 },
+                    ]),
+                    containsFire: containsFire,
+                    metadata: {
+                        width: 1024,
+                        height: 1024,
+                        localPath: faker.system.filePath(),
+                        latitude: faker.location.latitude({
+                            min: FRANCE_BOUNDING_BOX.minLat,
+                            max: FRANCE_BOUNDING_BOX.maxLat
+                        }),
+                        longitude: faker.location.longitude({
+                            min: FRANCE_BOUNDING_BOX.minLng,
+                            max: FRANCE_BOUNDING_BOX.maxLng
+                        }),
+                        boundingBoxes: containsFire
+                            ? Array.from({ length: faker.number.int({ min: 1, max: 10 }) })
+                                .map(() => Object.values({
+                                    xCenter: faker.number.float({ min: 0, max: 1, fractionDigits: 6 }),
+                                    yCenter: faker.number.float({ min: 0, max: 1, fractionDigits: 6 }),
+                                    width: faker.number.float({ min: 0, max: 1, fractionDigits: 6 }),
+                                    height: faker.number.float({ min: 0, max: 1, fractionDigits: 6 }),
+                                }).join(' '))
+                            : null
+                    },
+                };
+            }),
             skipDuplicates: true
         });
         
