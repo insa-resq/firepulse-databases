@@ -38,7 +38,7 @@ model Firefighter {
     rank              FirefighterRank
     training          FirefighterTraining?
     stationId         String
-    station           FireStation          @relation(fields: [stationId], references: [id], onDelete: Restrict)
+    station           FireStation          @relation(fields: [stationId], references: [id], onDelete: Cascade)
     userId            String               @unique
     user              User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
     availabilitySlots AvailabilitySlot[]
