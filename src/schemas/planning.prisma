@@ -4,6 +4,7 @@ model Planning {
     updatedAt        DateTime          @updatedAt
     year             Int
     weekNumber       Int
+    status           PlanningStatus    @default(GENERATING)
     stationId        String
     station          FireStation       @relation(fields: [stationId], references: [id], onDelete: Cascade)
     shiftAssignments ShiftAssignment[]
@@ -40,6 +41,13 @@ model AvailabilitySlot {
 
     @@unique([firefighterId, year, weekNumber, weekday])
     @@index([year, weekNumber, weekday, isAvailable])
+    @@schema("planning")
+}
+
+enum PlanningStatus {
+    GENERATING
+    FINALIZED
+
     @@schema("planning")
 }
 
