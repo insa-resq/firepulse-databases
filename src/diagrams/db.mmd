@@ -36,6 +36,7 @@ erDiagram
     datetime updatedAt
     int year
     int weekNumber
+    PlanningStatus status "GENERATING, FINALIZED"
     string stationId FK
   }
   ShiftAssignment:::planning {
