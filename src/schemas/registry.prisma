@@ -21,11 +21,11 @@ model Vehicle {
     type           VehicleType
     totalCount     Int
     availableCount Int
+    bookedCount    Int         @default(0)
     stationId      String
     station        FireStation @relation(fields: [stationId], references: [id], onDelete: Cascade)
 
-    @@index([stationId])
-    @@index([type])
+    @@unique([type, stationId])
     @@schema("registry")
 }
 
