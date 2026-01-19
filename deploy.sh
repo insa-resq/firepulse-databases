@@ -85,6 +85,7 @@ sshpass -e ssh "${SSH_OPTIONS[@]}" "$SSH_TARGET" "mkdir -p $DEPLOYMENT_PATH"
 echo "Copying files to remote server..."
 sshpass -e rsync -avz \
     --exclude 'node_modules' \
+    --exclude 'diagrams' \
     --exclude '.env' \
     --exclude '.env.example' \
     "src/" "$SSH_TARGET:$DEPLOYMENT_PATH/"

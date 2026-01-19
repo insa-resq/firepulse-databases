@@ -15,17 +15,30 @@ model FireStation {
 }
 
 model Vehicle {
-    id             String      @id @default(cuid(2))
-    createdAt      DateTime    @default(now())
-    updatedAt      DateTime    @updatedAt
+    id             String                @id @default(cuid(2))
+    createdAt      DateTime              @default(now())
+    updatedAt      DateTime              @updatedAt
     type           VehicleType
     totalCount     Int
-    availableCount Int
-    bookedCount    Int         @default(0)
     stationId      String
-    station        FireStation @relation(fields: [stationId], references: [id], onDelete: Cascade)
+    station        FireStation           @relation(fields: [stationId], references: [id], onDelete: Cascade)
+    availabilities VehicleAvailability[]
 
     @@unique([type, stationId])
+    @@schema("registry")
+}
+
+model VehicleAvailability {
+    id             String   @id @default(cuid(2))
+    createdAt      DateTime @default(now())
+    updatedAt      DateTime @updatedAt
+    weekday        Weekday
+    availableCount Int      @default(0)
+    bookedCount    Int      @default(0)
+    vehicleId      String
+    vehicle        Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+    @@unique([vehicleId, weekday])
     @@schema("registry")
 }
 
