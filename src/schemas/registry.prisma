@@ -28,20 +28,6 @@ model Vehicle {
     @@schema("registry")
 }
 
-model VehicleAvailability {
-    id             String   @id @default(cuid(2))
-    createdAt      DateTime @default(now())
-    updatedAt      DateTime @updatedAt
-    weekday        Weekday
-    availableCount Int      @default(0)
-    bookedCount    Int      @default(0)
-    vehicleId      String
-    vehicle        Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
-
-    @@unique([vehicleId, weekday])
-    @@schema("registry")
-}
-
 model Firefighter {
     id                String               @id @default(cuid(2))
     createdAt         DateTime             @default(now())
